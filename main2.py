@@ -82,15 +82,15 @@ def show_client_garments(client_id):
             if garment[8] is None:
                 # Agregar filas con colores alternos y aplicar etiquetas inmediatamente
                 if i % 2 == 0:
-                    garments_tree.insert('', tk.END, values=(garment[0], garment[2], garment[3], round(garment[4] * (40 / 100), 2), round(garment[5] * (50 / 100),2), garment[6], garment[7][:10]), tags=('color1',))
+                    garments_tree.insert('', tk.END, values=(garment[0], garment[2], garment[3], round(garment[4] * 0.4, 2), round(garment[5] * (50 / 100),2), garment[6], garment[7][:10]), tags=('color1',))
                 else:
-                    garments_tree.insert('', tk.END, values=(garment[0], garment[2], garment[3], round(garment[4] * (40 / 100),2), round(garment[5] * (50 / 100),2), garment[6], garment[7][:10]), tags=('color2',))
+                    garments_tree.insert('', tk.END, values=(garment[0], garment[2], garment[3], round(garment[4] * 0.4 ,2), round(garment[5] * (50 / 100),2), garment[6], garment[7][:10]), tags=('color2',))
             else:
                 # Agregar filas con colores alternos y aplicar etiquetas inmediatamente
                 if i % 2 == 0:
-                    garments_tree.insert('', tk.END, values=(garment[0], garment[2], garment[3], round(garment[4] * (40 / 100), 2), round(garment[5] * (50 / 100),2), garment[6], garment[7][:10], garment[8][:10]), tags=('color1',))
+                    garments_tree.insert('', tk.END, values=(garment[0], garment[2], garment[3], round(garment[4] * 0.4, 2), round(garment[5] * (50 / 100),2), garment[6], garment[7][:10], garment[8][:10]), tags=('color1',))
                 else:
-                    garments_tree.insert('', tk.END, values=(garment[0], garment[2], garment[3], round(garment[4] * (40 / 100), 2), round(garment[5] * (50 / 100),2), garment[6], garment[7][:10], garment[8][:10]), tags=('color2',))
+                    garments_tree.insert('', tk.END, values=(garment[0], garment[2], garment[3], round(garment[4] * 0.4, 2), round(garment[5] * (50 / 100),2), garment[6], garment[7][:10], garment[8][:10]), tags=('color2',))
     
 def update_list(event):
     filter = entry_new_client.get()
@@ -107,6 +107,18 @@ def add_garment():
         
     ventana_agregar_prenda = tk.Toplevel(frame_clients)
     ventana_agregar_prenda.title("Agregar Prenda")
+    ventana_agregar_prenda.update_idletasks()  # Asegurarse de que la ventana tiene dimensiones antes de obtenerlas
+    width = ventana_agregar_prenda.winfo_width()
+    height = ventana_agregar_prenda.winfo_height()
+
+    screen_width = ventana_agregar_prenda.winfo_screenwidth()
+    screen_height = ventana_agregar_prenda.winfo_screenheight()
+
+    x = (screen_width - width) // 2
+    y = (screen_height - height) // 2
+    x = x -100
+    y = y -50
+    ventana_agregar_prenda.geometry(f"+{x}+{y}")
 
     # Etiquetas y campos de entrada en el formulario
     tk.Label(ventana_agregar_prenda, text="Descripcion:").grid(row=0, column=0, padx=10, pady=5, sticky="e")
@@ -131,8 +143,8 @@ def add_garment():
 def guardar_prenda(client_id, descripcion, precio, fecha_in, ventana_agregar_prenda):
     # Aquí puedes realizar las acciones necesarias para guardar la prenda
     # Por ejemplo, agregar el nombre de la prenda a una lista o base de datos
-    precio_40 = int(precio) * (40/100)
-    precio_50 = int(precio) * (50/100)
+    precio_40 = precio
+    precio_50 = precio
     cobrada = 0
     with sqlite3.connect('gestor_clientes.db') as conn:
         c = conn.cursor()
@@ -177,7 +189,7 @@ def mark_as_paid():
         with sqlite3.connect('gestor_clientes.db') as conn:
             c = conn.cursor()
             c.execute('UPDATE prendas SET cobrada = ? WHERE ID = ?', (cobrada, garment_id))
-            c.execute('UPDATE prendas SET fecha_venta = ? WHERE ID = ?', (datetime.now(), garment_id))
+            c.execute('UPDATE prendas SET fecha_venta = ? WHERE ID = ?', (datetime.now().strftime("%d/%m/%y"), garment_id))
 
             
             conn.commit()
@@ -395,7 +407,7 @@ def mostra_datos_cliente():
 def mostrar_prendas_fecha():
     ventana_prendas = tk.Toplevel(window)
     ventana_prendas.geometry("600x400")
-    ventana_prendas.title("Editar Cliente")
+    ventana_prendas.title("Fechas")
     selection = list_clients.selection()
     ventana_prendas.update_idletasks()  # Asegurarse de que la ventana tiene dimensiones antes de obtenerlas
     width = ventana_prendas.winfo_width()
@@ -458,31 +470,34 @@ def mostrar_prendas_fecha():
 
 #Init de tkinter
 window = tk.Tk()
+window.geometry('1280x700')
+window.minsize(1200,700)
 window.title("Libro de Prendas")
 icono = tk.PhotoImage(file="fox_scarf_icon_159308.png")
 window.iconphoto(True, icono)
 color_fondo = "#77824A"
 window.configure(bg=color_fondo)
-initialize_db()
+# initialize_db()
 
 #Main Frame
 frame_clients = tk.Frame(window)
+
 frame_clients.pack(expand=True, fill='both', padx=10,pady=10)
 
-frame_clients.grid_columnconfigure(0, weight=1)
-frame_clients.grid_rowconfigure(0, weight=1)
+frame_clients.grid_columnconfigure(1, weight=1)
+frame_clients.grid_rowconfigure(1, weight=1)
 
 #Logo y Nombre
-tk.Label(frame_clients, text="Zorritas VIntage").grid(row=0, column=1, sticky=tk.E, padx=500, pady=10)
+tk.Label(frame_clients, text="Zorritas VIntage").grid(row=0, column=1, sticky=tk.E, padx=5, pady=5)
 ruta_logo = 'fox_scarf_icon_159308.png'
 imagen = PhotoImage(file=ruta_logo)
 label_logo = tk.Label(frame_clients, image=imagen)
-label_logo.grid(row=1, column=1, padx=500, pady=10, sticky=tk.EW)
+label_logo.grid(row=1, column=1, padx=5, pady=5, sticky=tk.E)
 
 #Buscar Clientes
-entry_new_client = tk.Entry(frame_clients) 
+entry_new_client = tk.Entry(frame_clients, width=40) 
 entry_new_client.focus()
-entry_new_client.grid(row=0, column=0, padx=10, pady=10, sticky=tk.EW)
+entry_new_client.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
 
 #Vista de datos de Clientes
 nomb_variable = tk.StringVar()
@@ -499,47 +514,47 @@ label_cliente_ig.grid(row=5, column=1, sticky=tk.EW)
 
 #Check Button No Cobradas
 solo_no_cobradas = tk.BooleanVar()
-checkbutton = tk.Checkbutton(frame_clients, text="Mostrar solo no cobradas", variable=solo_no_cobradas, command=on_checkbutton_changed)
+checkbutton = tk.Checkbutton(frame_clients, text="Mostrar solo no cobradas", variable=solo_no_cobradas)
 checkbutton.grid(row=1, column=1, sticky=tk.W, padx=10, pady=10)
 
 #Lista de Clientes
-list_clients = ttk.Treeview(frame_clients, columns=("ID", "Name"), height=200)
+list_clients = ttk.Treeview(frame_clients, columns=("ID", "Name"), height=15)
 
 list_clients.heading("#0", text="ID")
 list_clients.heading("ID", text="ID")
 list_clients.heading("Name", text="Nombre")
 list_clients.column("#0", stretch=tk.NO, width=0)
 list_clients.column("ID", stretch=tk.NO ,width=0)
-list_clients.column("Name", stretch=tk.YES, minwidth=150, width=200)
-list_clients.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
+list_clients.column("Name", stretch=tk.YES, width=150)
+
+list_clients.grid(row=2, column=0, padx=10, pady=10, sticky=tk.NSEW)
 
 entry_new_client.bind('<KeyRelease>', update_list)
 
 
-#Lista de Prendas
-garments_tree = ttk.Treeview(frame_clients, columns=("ID", "Description", "Price Real", "Price 40", "Price 50", "Cobrada", "Fecha", "Fecha_cob"))
+# #Lista de Prendas
+garments_tree = ttk.Treeview(frame_clients, columns=("ID", "Description", "Price Real", "Price 40", "Price 50", "Cobrada", "Fecha", "Fecha_cob"), height=20)
 
 garments_tree.heading("#0", text="Prendas")
 garments_tree.heading("ID", text="ID")
 garments_tree.heading("Description", text="Descripción")
-garments_tree.heading("Price Real", text="Precio Real")
-garments_tree.heading("Price 40", text="Precio 40")
-garments_tree.heading("Price 50", text="Precio 50")
+garments_tree.heading("Price Real", text="Precio Final")
+garments_tree.heading("Price 40", text="Precio 40 %")
+garments_tree.heading("Price 50", text="Precio 50 %")
 garments_tree.heading("Cobrada", text="Cobrada")
 garments_tree.heading("Fecha", text="Fecha")
 garments_tree.heading("Fecha_cob", text="Fecha_cob")
 
 garments_tree.column("#0", stretch=tk.NO, width=0)
 garments_tree.column("ID", stretch=tk.NO, width=0)
-garments_tree.column("Description", stretch=tk.YES, width=int(window.winfo_screenwidth() * 0.4), anchor=CENTER)  # 60% of the screen width
-garments_tree.column("Price Real", stretch=tk.YES, minwidth=10, width=30, anchor=CENTER)
-garments_tree.column("Price 40", stretch=tk.YES, minwidth=10, width=30, anchor=CENTER)
-garments_tree.column("Price 50", stretch=tk.YES, minwidth=10, width=30, anchor=CENTER)
-garments_tree.column("Cobrada", stretch=tk.YES, minwidth=10, width=20, anchor=CENTER)
-garments_tree.column("Fecha", stretch=tk.YES, minwidth=10, width=40, anchor=CENTER)
-garments_tree.column("Fecha_cob", stretch=tk.YES, minwidth=10, width=40, anchor=CENTER)
-
-garments_tree.grid(row=2, column=1, padx=10, pady=10, sticky=tk.NSEW)
+garments_tree.column("Description", stretch=tk.YES, anchor=CENTER)  # 60% of the screen width
+garments_tree.column("Price Real", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
+garments_tree.column("Price 40", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
+garments_tree.column("Price 50", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
+garments_tree.column("Cobrada", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
+garments_tree.column("Fecha", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
+garments_tree.column("Fecha_cob", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
+garments_tree.grid(row=2, column=1, padx=10, pady=10, sticky=tk.EW)
 
 #Acciones de clientes
 btn_add_client = tk.Button(frame_clients, text="Agregar Cliente", command=agregar_cliente, width=27)
@@ -558,8 +573,8 @@ btn_mark_as_paid = tk.Button(frame_clients, text="Cobrada", command=mark_as_paid
 btn_mark_as_no_paid = tk.Button(frame_clients, text="No Cobrada", command=mark_as_no_paid)
 
 btn_add_garment.grid(row=3, column=1, pady=10, padx=10, sticky=tk.W)
-btn_delete_garment.grid(row=3, column=1, pady=5,padx=135, sticky=tk.W)
-btn_ver_prendas.grid(row=3, column=1, pady=5,padx=300, sticky=tk.W)
+btn_delete_garment.grid(row=3, column=1, pady=5,padx=150, sticky=tk.W)
+btn_ver_prendas.grid(row=3, column=1, pady=5,padx=290, sticky=tk.W)
 btn_mark_as_paid.grid(row=3, column=1, sticky=tk.E, padx=10, pady=10)
 btn_mark_as_no_paid.grid(row=3, column=1, sticky=tk.E, pady=10, padx=100)
 
