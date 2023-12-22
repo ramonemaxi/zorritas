@@ -467,7 +467,10 @@ initialize_db()
 
 #Main Frame
 frame_clients = tk.Frame(window)
-frame_clients.pack( expand=True, padx=10, pady=10)
+frame_clients.pack(expand=True, fill='both', padx=10,pady=10)
+
+frame_clients.grid_columnconfigure(0, weight=1)
+frame_clients.grid_rowconfigure(0, weight=1)
 
 #Logo y Nombre
 tk.Label(frame_clients, text="Zorritas VIntage").grid(row=0, column=1, sticky=tk.E, padx=500, pady=10)

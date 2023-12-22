@@ -34,23 +34,23 @@ entry_new_client = tk.Entry(frame_clients, width=50)
 entry_new_client.focus()
 entry_new_client.grid(row=0, column=0, padx=10, pady=10, sticky=tk.EW)
 
-# #Vista de datos de Clientes
-# nomb_variable = tk.StringVar()
-# label_cliente_nombre = tk.Label(frame_clients, text="Nombre del Cliente", width=150, textvariable=nomb_variable)
-# label_cliente_nombre.grid(row=3, column=1, sticky=tk.EW)
-# tel_variable = tk.StringVar()
-# label_cliente_telefono = tk.Label(frame_clients, text="Telefono del Cliente", width=150, textvariable=tel_variable)
-# label_cliente_telefono.grid(row=4, column=1, sticky=tk.EW)
-# ig_variable = tk.StringVar()
-# label_cliente_ig = tk.Label(frame_clients, text="ig del Cliente", width=150, textvariable=ig_variable)
-# label_cliente_ig.grid(row=5, column=1, sticky=tk.EW)
+#Vista de datos de Clientes
+nomb_variable = tk.StringVar()
+label_cliente_nombre = tk.Label(frame_clients, text="Nombre del Cliente", width=150, textvariable=nomb_variable)
+label_cliente_nombre.grid(row=3, column=1, sticky=tk.EW)
+tel_variable = tk.StringVar()
+label_cliente_telefono = tk.Label(frame_clients, text="Telefono del Cliente", width=150, textvariable=tel_variable)
+label_cliente_telefono.grid(row=4, column=1, sticky=tk.EW)
+ig_variable = tk.StringVar()
+label_cliente_ig = tk.Label(frame_clients, text="ig del Cliente", width=150, textvariable=ig_variable)
+label_cliente_ig.grid(row=5, column=1, sticky=tk.EW)
 
 
 
-# #Check Button No Cobradas
-# solo_no_cobradas = tk.BooleanVar()
-# checkbutton = tk.Checkbutton(frame_clients, text="Mostrar solo no cobradas", variable=solo_no_cobradas, command=on_checkbutton_changed)
-# checkbutton.grid(row=1, column=1, sticky=tk.W, padx=10, pady=10)
+#Check Button No Cobradas
+solo_no_cobradas = tk.BooleanVar()
+checkbutton = tk.Checkbutton(frame_clients, text="Mostrar solo no cobradas", variable=solo_no_cobradas)
+checkbutton.grid(row=1, column=1, sticky=tk.W, padx=10, pady=10)
 
 #Lista de Clientes
 list_clients = ttk.Treeview(frame_clients, columns=("ID", "Name"), height=5)
