@@ -60,12 +60,16 @@ def show_clients_in_list(filter=None):
         list_clients.focus(list_clients.get_children()[0])
 
 def show_client_garments(client_id):
+   
     with sqlite3.connect('gestor_clientes.db') as conn:
         c = conn.cursor()
-        if solo_no_cobradas.get():
+        if control.get() == 1:
             c.execute('SELECT * FROM prendas WHERE cliente_id = ? and cobrada = 0 ORDER BY fecha DESC', (client_id,))
-        else:
+        if control.get() == 2:
+            c.execute('SELECT * FROM prendas WHERE cliente_id = ? and cobrada = 1 ORDER BY fecha DESC', (client_id,))
+        if control.get() == 3:
             c.execute('SELECT * FROM prendas WHERE cliente_id = ? ORDER BY fecha DESC', (client_id,))
+        
         garments = c.fetchall()
         garments_tree.delete(*garments_tree.get_children())  # Clear existing items
 
@@ -179,7 +183,44 @@ def delete_garment():
                 client_name = client_item['values'][0]
                 show_client_garments(client_name)
 
-def mark_as_paid():
+def mark_paid():
+    fecha_actual = datetime.now().date()
+    client_selection = list_clients.selection()
+    
+    if not client_selection:
+        return
+    client_item = list_clients.item(client_selection[0]) 
+    client_id = client_item['values'][0]
+        
+    ventana_agregar_prenda = tk.Toplevel(frame_clients)
+    ventana_agregar_prenda.title("Fecha de Cobro")
+    ventana_agregar_prenda.update_idletasks()  # Asegurarse de que la ventana tiene dimensiones antes de obtenerlas
+    width = ventana_agregar_prenda.winfo_width()
+    height = ventana_agregar_prenda.winfo_height()
+
+    screen_width = ventana_agregar_prenda.winfo_screenwidth()
+    screen_height = ventana_agregar_prenda.winfo_screenheight()
+
+    x = (screen_width - width) // 2
+    y = (screen_height - height) // 2
+    x = x -100
+    y = y -50
+    ventana_agregar_prenda.geometry(f"+{x}+{y}")
+
+    # Etiquetas y campos de entrada en el formulario
+
+    entry_fecha = Calendar(ventana_agregar_prenda, selectmode='day', year=fecha_actual.year, month=fecha_actual.month, day=fecha_actual.day)
+    entry_fecha.grid(row=2, column=1, padx=10, pady=5)
+    
+    
+    # Botón para guardar la prenda
+    btn_guardar_prenda = tk.Button(ventana_agregar_prenda, text="Marcar como Cobrada", command=lambda: Cobrada(entry_fecha.get_date(), ventana_agregar_prenda))
+    btn_guardar_prenda.grid(row=3, column=1, padx=10, pady=5)
+    
+    ventana_agregar_prenda.bind('<Return>', lambda event=None: btn_guardar_prenda.invoke())
+
+def Cobrada(fecha, ventana):
+    
     garment_selection = garments_tree.selection()
     if garment_selection:
         garment_item = garments_tree.item(garment_selection[0])
@@ -189,7 +230,7 @@ def mark_as_paid():
         with sqlite3.connect('gestor_clientes.db') as conn:
             c = conn.cursor()
             c.execute('UPDATE prendas SET cobrada = ? WHERE ID = ?', (cobrada, garment_id))
-            c.execute('UPDATE prendas SET fecha_venta = ? WHERE ID = ?', (datetime.now().strftime("%d/%m/%y"), garment_id))
+            c.execute('UPDATE prendas SET fecha_venta = ? WHERE ID = ?', (fecha, garment_id))
 
             
             conn.commit()
@@ -199,6 +240,7 @@ def mark_as_paid():
             client_item = list_clients.item(client_selection[0])
             client_name = client_item['values'][0]
             show_client_garments(client_name)
+            ventana.destroy()
 
 def mark_as_no_paid():
     garment_selection = garments_tree.selection()
@@ -488,37 +530,45 @@ frame_clients.grid_columnconfigure(1, weight=1)
 frame_clients.grid_rowconfigure(1, weight=1)
 
 #Logo y Nombre
-tk.Label(frame_clients, text="Zorritas VIntage").grid(row=0, column=1, sticky=tk.E, padx=5, pady=5)
+tk.Label(frame_clients, text="Zorritas VIntage").grid(row=0, column=1, sticky=tk.NSEW)
 ruta_logo = 'fox_scarf_icon_159308.png'
 imagen = PhotoImage(file=ruta_logo)
 label_logo = tk.Label(frame_clients, image=imagen)
-label_logo.grid(row=1, column=1, padx=5, pady=5, sticky=tk.E)
+label_logo.grid(row=1, column=1, sticky=tk.NSEW)
 
 #Buscar Clientes
 entry_new_client = tk.Entry(frame_clients, width=40) 
 entry_new_client.focus()
-entry_new_client.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
+entry_new_client.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
 
 #Vista de datos de Clientes
 nomb_variable = tk.StringVar()
 label_cliente_nombre = tk.Label(frame_clients, text="Nombre del Cliente", width=150, textvariable=nomb_variable)
-label_cliente_nombre.grid(row=3, column=1, sticky=tk.EW)
+label_cliente_nombre.grid(row=4, column=1, sticky=tk.W)
 tel_variable = tk.StringVar()
 label_cliente_telefono = tk.Label(frame_clients, text="Telefono del Cliente", width=150, textvariable=tel_variable)
-label_cliente_telefono.grid(row=4, column=1, sticky=tk.EW)
+label_cliente_telefono.grid(row=5, column=1, sticky=tk.NS)
 ig_variable = tk.StringVar()
 label_cliente_ig = tk.Label(frame_clients, text="ig del Cliente", width=150, textvariable=ig_variable)
-label_cliente_ig.grid(row=5, column=1, sticky=tk.EW)
+label_cliente_ig.grid(row=6, column=1, sticky=tk.E)
 
 
 
 #Check Button No Cobradas
-solo_no_cobradas = tk.BooleanVar()
-checkbutton = tk.Checkbutton(frame_clients, text="Mostrar solo no cobradas", variable=solo_no_cobradas)
-checkbutton.grid(row=1, column=1, sticky=tk.W, padx=10, pady=10)
+control = tk.IntVar()
+control.set(3)
+checkbutton = tk.Radiobutton(frame_clients, text="Mostrar solo no cobradas", variable=control, value=1)
+checkbutton.grid(row=2, column=1, sticky=tk.W, padx=0, pady=0)
+
+# solo_cobradas = tk.IntVar()
+checkbutton = tk.Radiobutton(frame_clients, text="Mostrar solo cobradas", variable=control, value=2)
+checkbutton.grid(row=2, column=1, sticky=tk.E, padx=0, pady=0)
+
+checkbutton = tk.Radiobutton(frame_clients, text="Mostrar Todo", variable=control, value=3)
+checkbutton.grid(row=2, column=1, sticky=tk.NS, padx=0, pady=0)
 
 #Lista de Clientes
-list_clients = ttk.Treeview(frame_clients, columns=("ID", "Name"), height=15)
+list_clients = ttk.Treeview(frame_clients, columns=("ID", "Name"), height=10)
 
 list_clients.heading("#0", text="ID")
 list_clients.heading("ID", text="ID")
@@ -527,7 +577,7 @@ list_clients.column("#0", stretch=tk.NO, width=0)
 list_clients.column("ID", stretch=tk.NO ,width=0)
 list_clients.column("Name", stretch=tk.YES, width=150)
 
-list_clients.grid(row=2, column=0, padx=10, pady=10, sticky=tk.NSEW)
+list_clients.grid(row=3, column=0, padx=10, pady=0, sticky=tk.NSEW)
 
 entry_new_client.bind('<KeyRelease>', update_list)
 
@@ -554,32 +604,33 @@ garments_tree.column("Price 50", stretch=tk.NO, minwidth=10, width=100, anchor=C
 garments_tree.column("Cobrada", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
 garments_tree.column("Fecha", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
 garments_tree.column("Fecha_cob", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
-garments_tree.grid(row=2, column=1, padx=10, pady=10, sticky=tk.EW)
+garments_tree.grid(row=3, column=1, padx=10, pady=0, sticky=tk.EW)
 
 #Acciones de clientes
 btn_add_client = tk.Button(frame_clients, text="Agregar Cliente", command=agregar_cliente, width=27)
 btn_modif_cliente = tk.Button(frame_clients, text="Modificar Cliente", command=editar_cliente_form, width=27)
 btn_eliminar_cliente = tk.Button(frame_clients, text="Eliminar Cliente", command=eliminar_cliente_seleccionado, width=27)
 
-btn_add_client.grid(row=3, column=0, padx=10, pady=10, sticky=tk.W)
-btn_modif_cliente.grid(row=4, column=0, padx=10, pady=10, sticky=tk.W)
-btn_eliminar_cliente.grid(row=5, column=0, pady=10,padx=10, sticky=tk.W)
+btn_add_client.grid(row=4, column=0, padx=10, pady=10, sticky=tk.W)
+btn_modif_cliente.grid(row=5, column=0, padx=10, pady=10, sticky=tk.W)
+btn_eliminar_cliente.grid(row=6, column=0, pady=10,padx=10, sticky=tk.W)
 
 #Opciones de prendas
 btn_add_garment = tk.Button(frame_clients, text="Agregar Prenda", command=add_garment)
 btn_delete_garment = tk.Button(frame_clients, text="Eliminar Prenda", command=delete_garment)
 btn_ver_prendas = tk.Button(frame_clients, text="Ver Prendas", command=mostrar_prendas_fecha)
-btn_mark_as_paid = tk.Button(frame_clients, text="Cobrada", command=mark_as_paid)
+btn_mark_as_paid = tk.Button(frame_clients, text="Cobrada", command=mark_paid)
 btn_mark_as_no_paid = tk.Button(frame_clients, text="No Cobrada", command=mark_as_no_paid)
 
-btn_add_garment.grid(row=3, column=1, pady=10, padx=10, sticky=tk.W)
-btn_delete_garment.grid(row=3, column=1, pady=5,padx=150, sticky=tk.W)
-btn_ver_prendas.grid(row=3, column=1, pady=5,padx=290, sticky=tk.W)
-btn_mark_as_paid.grid(row=3, column=1, sticky=tk.E, padx=10, pady=10)
-btn_mark_as_no_paid.grid(row=3, column=1, sticky=tk.E, pady=10, padx=100)
+btn_add_garment.grid(row=4, column=1, pady=10, padx=10, sticky=tk.W)
+btn_delete_garment.grid(row=4, column=1, pady=5,padx=150, sticky=tk.W)
+btn_ver_prendas.grid(row=4, column=1, pady=5,padx=290, sticky=tk.W)
+btn_mark_as_paid.grid(row=4, column=1, sticky=tk.E, padx=10, pady=10)
+btn_mark_as_no_paid.grid(row=4, column=1, sticky=tk.E, pady=10, padx=100)
 
 list_clients.bind('<<TreeviewSelect>>', select_client)
-solo_no_cobradas.trace_add('write', on_checkbutton_changed)
+control.trace_add('write', on_checkbutton_changed)
+# solo_cobradas.trace_add('write', on_checkbutton_changed)
 
 # Set weight to make the columns expand with window resizing
 frame_clients.columnconfigure(0, weight=1)
