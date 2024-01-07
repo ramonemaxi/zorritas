@@ -698,7 +698,7 @@ garments_tree.column("Price 50", stretch=tk.NO, minwidth=10, width=100, anchor=C
 garments_tree.column("Cobrada", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
 garments_tree.column("Fecha", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
 garments_tree.column("Fecha_cob", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
-garments_tree.grid(row=3, column=1, padx=10, pady=5, sticky=tk.EW)
+garments_tree.grid(row=3, column=1, padx=10, pady=0, sticky=tk.EW)
 
 #totales prendas
 totale_tree = ttk.Treeview(frame_clients, columns=("ID","Price 40", "Price 50"), height=1)
