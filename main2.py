@@ -638,13 +638,13 @@ entry_new_client.grid(row=0, column=0, padx=10, pady=10, sticky=tk.NSEW)
 #Vista de datos de Clientes
 nomb_variable = tk.StringVar()
 label_cliente_nombre = tk.Label(frame_clients, text="Nombre del Cliente", width=150, textvariable=nomb_variable)
-label_cliente_nombre.grid(row=5, column=1, sticky=tk.W)
+label_cliente_nombre.grid(row=6, column=1, sticky=tk.W)
 tel_variable = tk.StringVar()
 label_cliente_telefono = tk.Label(frame_clients, text="Telefono del Cliente", width=150, textvariable=tel_variable)
-label_cliente_telefono.grid(row=6, column=1, sticky=tk.NS)
+label_cliente_telefono.grid(row=7, column=1, sticky=tk.NS)
 ig_variable = tk.StringVar()
 label_cliente_ig = tk.Label(frame_clients, text="ig del Cliente", width=150, textvariable=ig_variable)
-label_cliente_ig.grid(row=7, column=1, sticky=tk.E)
+label_cliente_ig.grid(row=8, column=1, sticky=tk.E)
 
 
 
@@ -671,7 +671,7 @@ list_clients.column("#0", stretch=tk.NO, width=0)
 list_clients.column("ID", stretch=tk.NO ,width=0)
 list_clients.column("Name", stretch=tk.YES, width=150)
 
-list_clients.grid(row=3, column=0, padx=10, pady=0, sticky=tk.NSEW)
+list_clients.grid(row=4, column=0, padx=10, pady=0, sticky=tk.NSEW)
 
 entry_new_client.bind('<KeyRelease>', update_list)
 
@@ -698,7 +698,7 @@ garments_tree.column("Price 50", stretch=tk.NO, minwidth=10, width=100, anchor=C
 garments_tree.column("Cobrada", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
 garments_tree.column("Fecha", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
 garments_tree.column("Fecha_cob", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
-garments_tree.grid(row=3, column=1, padx=10, pady=0, sticky=tk.EW)
+garments_tree.grid(row=4, column=1, padx=10, pady=0, sticky=tk.EW)
 
 #totales prendas
 totale_tree = ttk.Treeview(frame_clients, columns=("ID","Price 40", "Price 50"), height=1)
@@ -712,16 +712,16 @@ totale_tree.column("#0", stretch=tk.NO, width=0)
 totale_tree.column("ID", stretch=tk.NO, width=0)
 totale_tree.column("Price 40", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
 totale_tree.column("Price 50", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
-totale_tree.grid(row=4, column=1, padx=10, pady=0, sticky=tk.E)
+totale_tree.grid(row=5, column=1, padx=10, pady=0, sticky=tk.E)
 
 #Acciones de clientes
 btn_add_client = tk.Button(frame_clients, text="Agregar Cliente", command=agregar_cliente, width=27)
 btn_modif_cliente = tk.Button(frame_clients, text="Modificar Cliente", command=editar_cliente_form, width=27)
 btn_eliminar_cliente = tk.Button(frame_clients, text="Eliminar Cliente", command=eliminar_cliente_seleccionado, width=27)
 
-btn_add_client.grid(row=5, column=0, padx=10, pady=10, sticky=tk.W)
-btn_modif_cliente.grid(row=6, column=0, padx=10, pady=10, sticky=tk.W)
-btn_eliminar_cliente.grid(row=7, column=0, pady=10,padx=10, sticky=tk.W)
+btn_add_client.grid(row=6, column=0, padx=10, pady=10, sticky=tk.W)
+btn_modif_cliente.grid(row=7, column=0, padx=10, pady=10, sticky=tk.W)
+btn_eliminar_cliente.grid(row=8, column=0, pady=10,padx=10, sticky=tk.W)
 
 #Opciones de prendas
 btn_add_garment = tk.Button(frame_clients, text="Agregar Prenda", command=add_garment, bg="green", width=20)
@@ -731,12 +731,12 @@ btn_ver_prendas = tk.Button(frame_clients, text="Ver Prendas", command=mostrar_p
 btn_mark_as_paid = tk.Button(frame_clients, text="Cobrada", command=mark_paid)
 btn_mark_as_no_paid = tk.Button(frame_clients, text="No Cobrada", command=mark_as_no_paid)
 
-btn_add_garment.grid(row=4, column=1, pady=10, padx=10, sticky=tk.W)
-btn_mod_garment.grid(row=5, column=1, pady=10, padx=10, sticky=tk.W)
-btn_delete_garment.grid(row=6, column=1, pady=10,padx=10, sticky=tk.W)
-btn_ver_prendas.grid(row=7, column=1, pady=10,padx=10, sticky=tk.W)
-btn_mark_as_paid.grid(row=5, column=1, sticky=tk.E, padx=10, pady=10)
-btn_mark_as_no_paid.grid(row=5, column=1, sticky=tk.E, pady=10, padx=100)
+btn_add_garment.grid(row=5, column=1, pady=10, padx=10, sticky=tk.W)
+btn_mod_garment.grid(row=6, column=1, pady=10, padx=10, sticky=tk.W)
+btn_delete_garment.grid(row=7, column=1, pady=10,padx=10, sticky=tk.W)
+btn_ver_prendas.grid(row=8, column=1, pady=10,padx=10, sticky=tk.W)
+btn_mark_as_paid.grid(row=6, column=1, sticky=tk.E, padx=10, pady=10)
+btn_mark_as_no_paid.grid(row=6, column=1, sticky=tk.E, pady=10, padx=100)
 
 list_clients.bind('<<TreeviewSelect>>', select_client)
 control.trace_add('write', on_checkbutton_changed)
