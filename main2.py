@@ -648,18 +648,20 @@ label_cliente_ig.grid(row=8, column=1, sticky=tk.E)
 
 
 
+
+
 #Check Button No Cobradas
 control = tk.IntVar()
 control.set(3)
 checkbutton = tk.Radiobutton(frame_clients, text="Mostrar solo no cobradas", variable=control, value=1)
-checkbutton.grid(row=2, column=1, sticky=tk.W, padx=0, pady=0)
+checkbutton.grid(row=1, column=1, sticky=tk.SW, padx=0, pady=0)
 
 # solo_cobradas = tk.IntVar()
 checkbutton = tk.Radiobutton(frame_clients, text="Mostrar solo cobradas", variable=control, value=2)
-checkbutton.grid(row=2, column=1, sticky=tk.E, padx=0, pady=0)
+checkbutton.grid(row=1, column=1, sticky=tk.SE, padx=0, pady=0)
 
 checkbutton = tk.Radiobutton(frame_clients, text="Mostrar Todo", variable=control, value=3)
-checkbutton.grid(row=2, column=1, sticky=tk.NS, padx=0, pady=0)
+checkbutton.grid(row=1, column=1, sticky=tk.NS, padx=0, pady=0)
 
 #Lista de Clientes
 list_clients = ttk.Treeview(frame_clients, columns=("ID", "Name"), height=10)
