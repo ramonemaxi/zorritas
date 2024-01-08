@@ -133,7 +133,7 @@ def add_garment():
     entry_precio = tk.Entry(ventana_agregar_prenda, width=10)
     entry_precio.grid(row=1, column=1, padx=10, pady=5)
 
-    tk.Label(ventana_agregar_prenda, text="Fecha de ingreso:").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+    tk.Label(ventana_agregar_prenda, text="Fecha de Venta:").grid(row=2, column=0, padx=10, pady=5, sticky="e")
     entry_fecha = Calendar(ventana_agregar_prenda, selectmode='day', year=fecha_actual.year, month=fecha_actual.month, day=fecha_actual.day)
     entry_fecha.grid(row=2, column=1, padx=10, pady=5)
     
@@ -568,7 +568,7 @@ def editar_prenda_form():
     ventana_formulario.geometry(f"+{x}+{y}")
     # Etiquetas y campos de entrada en el formulario
     tk.Label(ventana_formulario, text="Nombre:").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-    entry_desc = tk.Entry(ventana_formulario)
+    entry_desc = tk.Entry(ventana_formulario, width=50)
     entry_desc.grid(row=0, column=1, padx=10, pady=5)
 
     tk.Label(ventana_formulario, text="Telefono:").grid(row=1, column=0, padx=10, pady=5, sticky="e")
@@ -618,13 +618,13 @@ window.configure(bg=color_fondo)
 #Main Frame
 frame_clients = tk.Frame(window)
 
-frame_clients.pack(expand=True, fill='both', padx=10,pady=10)
+frame_clients.pack(expand=True, fill='both', padx=5,pady=5)
 
 frame_clients.grid_columnconfigure(1, weight=1)
 frame_clients.grid_rowconfigure(1, weight=1)
 
 #Logo y Nombre
-tk.Label(frame_clients, text="Zorritas VIntage").grid(row=0, column=1, sticky=tk.NSEW)
+tk.Label(frame_clients, text="Zorritas Vintage").grid(row=0, column=1, sticky=tk.NSEW)
 ruta_logo = 'fox_scarf_icon_159308.png'
 imagen = PhotoImage(file=ruta_logo)
 label_logo = tk.Label(frame_clients, image=imagen)
@@ -633,7 +633,7 @@ label_logo.grid(row=0, column=1, sticky=tk.E)
 #Buscar Clientes
 entry_new_client = tk.Entry(frame_clients, width=40) 
 entry_new_client.focus()
-entry_new_client.grid(row=0, column=0, padx=10, pady=10, sticky=tk.NSEW)
+entry_new_client.grid(row=0, column=0, padx=5, pady=10, sticky=tk.NSEW)
 
 #Vista de datos de Clientes
 nomb_variable = tk.StringVar()
@@ -661,7 +661,7 @@ checkbutton = tk.Radiobutton(frame_clients, text="Mostrar solo cobradas", variab
 checkbutton.grid(row=1, column=1, sticky=tk.SE, padx=0, pady=0)
 
 checkbutton = tk.Radiobutton(frame_clients, text="Mostrar Todo", variable=control, value=3)
-checkbutton.grid(row=1, column=1, sticky=tk.NS, padx=0, pady=0)
+checkbutton.grid(row=1, column=1, sticky=tk.S, padx=0, pady=0)
 
 #Lista de Clientes
 list_clients = ttk.Treeview(frame_clients, columns=("ID", "Name"), height=10)
@@ -673,13 +673,13 @@ list_clients.column("#0", stretch=tk.NO, width=0)
 list_clients.column("ID", stretch=tk.NO ,width=0)
 list_clients.column("Name", stretch=tk.YES, width=150)
 
-list_clients.grid(row=4, column=0, padx=10, pady=0, sticky=tk.NSEW)
+list_clients.grid(row=4, column=0, padx=5, pady=0, sticky=tk.NSEW)
 
 entry_new_client.bind('<KeyRelease>', update_list)
 
 
 # #Lista de Prendas
-garments_tree = ttk.Treeview(frame_clients, columns=("ID", "Description", "Price Real", "Price 40", "Price 50", "Cobrada", "Fecha", "Fecha_cob"), height=20)
+garments_tree = ttk.Treeview(frame_clients, columns=("ID", "Description", "Price Real", "Price 40", "Price 50", "Cobrada", "Fecha", "Fecha_cob"), height=19)
 
 garments_tree.heading("#0", text="Prendas")
 garments_tree.heading("ID", text="ID")
@@ -688,7 +688,7 @@ garments_tree.heading("Price Real", text="Precio Venta")
 garments_tree.heading("Price 40", text="50 %")
 garments_tree.heading("Price 50", text="40 %")
 garments_tree.heading("Cobrada", text="Cobrada")
-garments_tree.heading("Fecha", text="Fecha")
+garments_tree.heading("Fecha", text="Fecha Venta")
 garments_tree.heading("Fecha_cob", text="Fecha_cob")
 
 garments_tree.column("#0", stretch=tk.NO, width=0)
@@ -700,7 +700,7 @@ garments_tree.column("Price 50", stretch=tk.NO, minwidth=10, width=100, anchor=C
 garments_tree.column("Cobrada", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
 garments_tree.column("Fecha", stretch=tk.NO, minwidth=10, width=80, anchor=CENTER)
 garments_tree.column("Fecha_cob", stretch=tk.NO, minwidth=10, width=100, anchor=CENTER)
-garments_tree.grid(row=4, column=1, padx=10, pady=0, sticky=tk.EW)
+garments_tree.grid(row=4, column=1, padx=5, pady=0, sticky=tk.EW)
 
 #totales prendas
 totale_tree = ttk.Treeview(frame_clients, columns=("ID","Price 40", "Price 50"), height=1)
