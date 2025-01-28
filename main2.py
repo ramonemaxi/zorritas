@@ -145,6 +145,19 @@ def add_garment():
     ventana_agregar_prenda.bind('<Return>', lambda event=None: btn_guardar_prenda.invoke())
 
 def guardar_prenda(client_id, descripcion, precio, fecha_in, ventana_agregar_prenda):
+    try:
+        if not descripcion:
+            show_error("Falta Descripción")
+            return
+        if not precio.isdigit():
+            show_error("Precio no es numerico")
+            return
+        precio = int(precio)
+        if precio <= 0:
+            show_error("Precio tiene que ser mayor que 0")
+            return
+    except:
+        return
     # Aquí puedes realizar las acciones necesarias para guardar la prenda
     # Por ejemplo, agregar el nombre de la prenda a una lista o base de datos
     precio_40 = precio
@@ -567,11 +580,11 @@ def editar_prenda_form():
 
     ventana_formulario.geometry(f"+{x}+{y}")
     # Etiquetas y campos de entrada en el formulario
-    tk.Label(ventana_formulario, text="Nombre:").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+    tk.Label(ventana_formulario, text="Descripcion:").grid(row=0, column=0, padx=10, pady=5, sticky="e")
     entry_desc = tk.Entry(ventana_formulario, width=50)
     entry_desc.grid(row=0, column=1, padx=10, pady=5)
 
-    tk.Label(ventana_formulario, text="Telefono:").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+    tk.Label(ventana_formulario, text="Precio:").grid(row=1, column=0, padx=10, pady=5, sticky="e")
     entry_precio = tk.Entry(ventana_formulario)
     entry_precio.grid(row=1, column=1, padx=10, pady=5)
 
@@ -587,8 +600,18 @@ def editar_prenda_form():
     
 def modificar_prenda(id, descripcion, precio, fecha, ventana):
     
-    if not descripcion and not precio and not fecha:
-        tk.messagebox.showerror("Error", "Por favor, ingrese todos los datos.")
+    try:
+        if not descripcion:
+            show_error("Falta Descripción")
+            return
+        if not precio.isdigit():
+            show_error("Precio no es numerico")
+            return
+        precio = int(precio)
+        if precio <= 0:
+            show_error("Precio tiene que ser mayor que 0")
+            return
+    except:
         return
     with sqlite3.connect('gestor_clientes.db') as conn:
         c = conn.cursor()
@@ -608,7 +631,7 @@ def modificar_prenda(id, descripcion, precio, fecha, ventana):
 window = tk.Tk()
 window.geometry('1280x700')
 window.minsize(1200,700)
-window.title("Libro de Prendas")
+window.title("Libro de Ventas")
 icono = tk.PhotoImage(file="fox_scarf_icon_159308.png")
 window.iconphoto(True, icono)
 color_fondo = "#77824A"
