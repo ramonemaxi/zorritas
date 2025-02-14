@@ -6,6 +6,10 @@ from tkcalendar import Calendar
 from datetime import datetime
 import time
 
+# ... (Aquí va tu código para importar módulos, 
+# ...  inicializar la base de datos, funciones auxiliares, etc.)
+
+# --- FUNCIONES CLIENTES ---
 def initialize_db():
     with sqlite3.connect('gestor_clientes.db') as conn:
         c = conn.cursor()
@@ -109,7 +113,7 @@ def add_garment():
     client_item = list_clients.item(client_selection[0]) 
     client_id = client_item['values'][0]
         
-    ventana_agregar_prenda = tk.Toplevel(frame_clients)
+    ventana_agregar_prenda = tk.Toplevel(frame_clientes_content)
     ventana_agregar_prenda.title("Agregar Prenda")
     ventana_agregar_prenda.update_idletasks()  # Asegurarse de que la ventana tiene dimensiones antes de obtenerlas
     width = ventana_agregar_prenda.winfo_width()
@@ -207,7 +211,7 @@ def mark_paid():
     client_item = list_clients.item(client_selection[0]) 
     client_id = client_item['values'][0]
         
-    ventana_agregar_prenda = tk.Toplevel(frame_clients)
+    ventana_agregar_prenda = tk.Toplevel(frame_clientes_content)
     ventana_agregar_prenda.title("Fecha de Cobro")
     ventana_agregar_prenda.update_idletasks()  # Asegurarse de que la ventana tiene dimensiones antes de obtenerlas
     width = ventana_agregar_prenda.winfo_width()
@@ -626,47 +630,60 @@ def modificar_prenda(id, descripcion, precio, fecha, ventana):
         show_client_garments(clien_id)
         no_cobradas_total(clien_id)
         ventana.destroy()
+# --- FIN DE LAS FUNCIONES CLIENTES ---
 
-#Init de tkinter
+# --- CREACIÓN DE LA VENTANA PRINCIPAL ---
 window = tk.Tk()
 window.geometry('1280x700')
-window.minsize(1200,700)
+window.minsize(1200, 700)
 window.title("Libro de Ventas")
 icono = tk.PhotoImage(file="fox_scarf_icon_159308.png")
 window.iconphoto(True, icono)
 color_fondo = "#77824A"
 window.configure(bg=color_fondo)
-# initialize_db()
 
-#Main Frame
-frame_clients = tk.Frame(window)
+# --- CREACIÓN DE PESTAÑAS ---
+notebook = ttk.Notebook(window)
+notebook.pack(fill="both", expand=True)
 
-frame_clients.pack(expand=True, fill='both', padx=5,pady=5)
+# Pestaña para Clientes
+pestaña_clientes = ttk.Frame(notebook)
+notebook.add(pestaña_clientes, text="Clientes")
 
-frame_clients.grid_columnconfigure(1, weight=1)
-frame_clients.grid_rowconfigure(1, weight=1)
+# Pestaña para Empresas (aún no implementada)
+pestaña_empresas = ttk.Frame(notebook)
+notebook.add(pestaña_empresas, text="Empresas")
+
+# --- CONTENIDO DE LA PESTAÑA CLIENTES ---
+
+# Frame principal para clientes
+frame_clientes_content = tk.Frame(pestaña_clientes)
+frame_clientes_content.pack(expand=True, fill='both', padx=5, pady=5)
+
+frame_clientes_content.grid_columnconfigure(1, weight=1)
+frame_clientes_content.grid_rowconfigure(1, weight=1)
 
 #Logo y Nombre
-tk.Label(frame_clients, text="Zorritas Vintage").grid(row=0, column=1, sticky=tk.NSEW)
+tk.Label(frame_clientes_content, text="Zorritas Vintage").grid(row=0, column=1, sticky=tk.NSEW)
 ruta_logo = 'fox_scarf_icon_159308.png'
 imagen = PhotoImage(file=ruta_logo)
-label_logo = tk.Label(frame_clients, image=imagen)
+label_logo = tk.Label(frame_clientes_content, image=imagen)
 label_logo.grid(row=0, column=1, sticky=tk.E)
 
 #Buscar Clientes
-entry_new_client = tk.Entry(frame_clients, width=40) 
+entry_new_client = tk.Entry(frame_clientes_content, width=40) 
 entry_new_client.focus()
 entry_new_client.grid(row=0, column=0, padx=5, pady=10, sticky=tk.NSEW)
 
 #Vista de datos de Clientes
 nomb_variable = tk.StringVar()
-label_cliente_nombre = tk.Label(frame_clients, text="Nombre del Cliente", width=150, textvariable=nomb_variable)
+label_cliente_nombre = tk.Label(frame_clientes_content, text="Nombre del Cliente", width=150, textvariable=nomb_variable)
 label_cliente_nombre.grid(row=6, column=1, sticky=tk.W)
 tel_variable = tk.StringVar()
-label_cliente_telefono = tk.Label(frame_clients, text="Telefono del Cliente", width=150, textvariable=tel_variable)
+label_cliente_telefono = tk.Label(frame_clientes_content, text="Telefono del Cliente", width=150, textvariable=tel_variable)
 label_cliente_telefono.grid(row=7, column=1, sticky=tk.NS)
 ig_variable = tk.StringVar()
-label_cliente_ig = tk.Label(frame_clients, text="ig del Cliente", width=150, textvariable=ig_variable)
+label_cliente_ig = tk.Label(frame_clientes_content, text="ig del Cliente", width=150, textvariable=ig_variable)
 label_cliente_ig.grid(row=8, column=1, sticky=tk.E)
 
 
@@ -676,18 +693,18 @@ label_cliente_ig.grid(row=8, column=1, sticky=tk.E)
 #Check Button No Cobradas
 control = tk.IntVar()
 control.set(3)
-checkbutton = tk.Radiobutton(frame_clients, text="Mostrar solo no cobradas", variable=control, value=1)
+checkbutton = tk.Radiobutton(frame_clientes_content, text="Mostrar solo no cobradas", variable=control, value=1)
 checkbutton.grid(row=1, column=1, sticky=tk.SW, padx=0, pady=0)
 
 # solo_cobradas = tk.IntVar()
-checkbutton = tk.Radiobutton(frame_clients, text="Mostrar solo cobradas", variable=control, value=2)
+checkbutton = tk.Radiobutton(frame_clientes_content, text="Mostrar solo cobradas", variable=control, value=2)
 checkbutton.grid(row=1, column=1, sticky=tk.SE, padx=0, pady=0)
 
-checkbutton = tk.Radiobutton(frame_clients, text="Mostrar Todo", variable=control, value=3)
+checkbutton = tk.Radiobutton(frame_clientes_content, text="Mostrar Todo", variable=control, value=3)
 checkbutton.grid(row=1, column=1, sticky=tk.S, padx=0, pady=0)
 
 #Lista de Clientes
-list_clients = ttk.Treeview(frame_clients, columns=("ID", "Name"), height=10)
+list_clients = ttk.Treeview(frame_clientes_content, columns=("ID", "Name"), height=10)
 
 list_clients.heading("#0", text="ID")
 list_clients.heading("ID", text="ID")
@@ -702,7 +719,7 @@ entry_new_client.bind('<KeyRelease>', update_list)
 
 
 # #Lista de Prendas
-garments_tree = ttk.Treeview(frame_clients, columns=("ID", "Description", "Price Real", "Price 40", "Price 50", "Cobrada", "Fecha", "Fecha_cob"), height=19)
+garments_tree = ttk.Treeview(frame_clientes_content, columns=("ID", "Description", "Price Real", "Price 40", "Price 50", "Cobrada", "Fecha", "Fecha_cob"), height=19)
 
 garments_tree.heading("#0", text="Prendas")
 garments_tree.heading("ID", text="ID")
@@ -726,7 +743,7 @@ garments_tree.column("Fecha_cob", stretch=tk.NO, minwidth=10, width=100, anchor=
 garments_tree.grid(row=4, column=1, padx=5, pady=0, sticky=tk.EW)
 
 #totales prendas
-totale_tree = ttk.Treeview(frame_clients, columns=("ID","Price 40", "Price 50"), height=1)
+totale_tree = ttk.Treeview(frame_clientes_content, columns=("ID","Price 40", "Price 50"), height=1)
 
 totale_tree.heading("#0", text="Prendas")
 totale_tree.heading("ID", text="ID")
@@ -740,21 +757,21 @@ totale_tree.column("Price 50", stretch=tk.NO, minwidth=10, width=100, anchor=CEN
 totale_tree.grid(row=5, column=1, padx=10, pady=0, sticky=tk.E)
 
 #Acciones de clientes
-btn_add_client = tk.Button(frame_clients, text="Agregar Cliente", command=agregar_cliente, width=27)
-btn_modif_cliente = tk.Button(frame_clients, text="Modificar Cliente", command=editar_cliente_form, width=27)
-btn_eliminar_cliente = tk.Button(frame_clients, text="Eliminar Cliente", command=eliminar_cliente_seleccionado, width=27)
+btn_add_client = tk.Button(frame_clientes_content, text="Agregar Cliente", command=agregar_cliente, width=27)
+btn_modif_cliente = tk.Button(frame_clientes_content, text="Modificar Cliente", command=editar_cliente_form, width=27)
+btn_eliminar_cliente = tk.Button(frame_clientes_content, text="Eliminar Cliente", command=eliminar_cliente_seleccionado, width=27)
 
 btn_add_client.grid(row=6, column=0, padx=10, pady=10, sticky=tk.W)
 btn_modif_cliente.grid(row=7, column=0, padx=10, pady=10, sticky=tk.W)
 btn_eliminar_cliente.grid(row=8, column=0, pady=10,padx=10, sticky=tk.W)
 
 #Opciones de prendas
-btn_add_garment = tk.Button(frame_clients, text="Agregar Prenda", command=add_garment, bg="green", width=20)
-btn_mod_garment = tk.Button(frame_clients, text="Modificar Prenda", command=editar_prenda_form, bg="yellow", width=20)
-btn_delete_garment = tk.Button(frame_clients, text="Eliminar Prenda", command=delete_garment, bg="red", width=20)
-btn_ver_prendas = tk.Button(frame_clients, text="Ver Prendas", command=mostrar_prendas_fecha, bg="white")
-btn_mark_as_paid = tk.Button(frame_clients, text="Cobrada", command=mark_paid)
-btn_mark_as_no_paid = tk.Button(frame_clients, text="No Cobrada", command=mark_as_no_paid)
+btn_add_garment = tk.Button(frame_clientes_content, text="Agregar Prenda", command=add_garment, bg="green", width=20)
+btn_mod_garment = tk.Button(frame_clientes_content, text="Modificar Prenda", command=editar_prenda_form, bg="yellow", width=20)
+btn_delete_garment = tk.Button(frame_clientes_content, text="Eliminar Prenda", command=delete_garment, bg="red", width=20)
+btn_ver_prendas = tk.Button(frame_clientes_content, text="Ver Prendas", command=mostrar_prendas_fecha, bg="white")
+btn_mark_as_paid = tk.Button(frame_clientes_content, text="Cobrada", command=mark_paid)
+btn_mark_as_no_paid = tk.Button(frame_clientes_content, text="No Cobrada", command=mark_as_no_paid)
 
 btn_add_garment.grid(row=5, column=1, pady=10, padx=10, sticky=tk.W)
 btn_mod_garment.grid(row=6, column=1, pady=10, padx=10, sticky=tk.W)
@@ -768,7 +785,25 @@ control.trace_add('write', on_checkbutton_changed)
 # solo_cobradas.trace_add('write', on_checkbutton_changed)
 
 # Set weight to make the columns expand with window resizing
-frame_clients.columnconfigure(0, weight=1)
-frame_clients.rowconfigure(2, weight=1)
+frame_clientes_content.columnconfigure(0, weight=1)
+frame_clientes_content.rowconfigure(2, weight=1)
 
+
+
+# --- CONTENIDO DE LA PESTAÑA EMPRESAS ---
+
+# Frame principal para empresas
+frame_empresas_content = tk.Frame(pestaña_empresas)
+frame_empresas_content.pack(expand=True, fill='both', padx=5, pady=5)
+
+
+
+
+# ... (resto de widgets para empresas, ADAPTADOS)
+
+# --- ADAPTACIÓN DE FUNCIONES ---
+
+
+
+# --- INICIO DE LA APLICACIÓN ---
 window.mainloop()
